@@ -1,0 +1,198 @@
+openapi: 3.0.0
+servers:
+# Added by API Auto Mocking Plugin
+- description: money tracker api mock server
+  url: https://virtserver.swaggerhub.com/kawakawaryuryu/money-tracker-api/1.0.0
+info:
+  description: This is a money tracker api
+  version: "1.0.0"
+  title: Money Tracker API
+  contact:
+    email: kawakawaryuryu@hotmail.co.jp 
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+paths:
+  /v1/expenses:
+    get:
+      summary: gets expenses
+      operationId: getExpenses
+      description: 支出一覧を取得する
+      parameters:
+        - name: beginDate
+          in: query
+          description: 開始日
+          schema:
+            type: string
+            format: date
+            example: '2019-10-01'
+        - name: endDate
+          in: query
+          description: 終了日
+          schema:
+            type: string
+            format: date
+            example: '2019-10-31'
+      responses:
+        '200':
+          description: get succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesResponse'
+    post:
+      summary: adds a expense
+      operationId: addExpense
+      description: 支出を登録する
+      requestBody:
+        description: expense object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseRequest'
+      responses:
+        '201':
+          description: registered successfully
+          headers:
+            Location:
+              description: created expense url
+              schema:
+                type: string
+                format: url
+        '400':
+          description: invalid input
+  /v1/expenses/{expenseId}:
+    parameters: 
+      - name: expenseId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: gets a expense
+      operationId: getExpense
+      description: |
+        支出詳細を取得する
+      responses:
+        '200':
+          description: get successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseResponse'
+        '404':
+          description: not found expenseId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /v1/results/{resultId}:
+    get:
+      summary: gets Result
+      operationId: getResult
+      description: |
+        その月の収支結果を取得する
+      parameters: 
+        - name: resultId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '2019-10'
+      responses:
+        '200':
+          description: get successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultResponse'
+        '404':
+          description: not found resultId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+components:
+  schemas:
+    NotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          description: エラーコード
+          example: 404
+        message:
+          type: string
+          description: エラーメッセージ
+          example: 指定されたIDは存在しません
+    ExpensesResponse:
+      type: object
+      properties:
+        expenses:
+          type: array
+          description: 支出一覧リスト
+          items:
+            $ref: '#/components/schemas/ExpenseResponse'
+    ExpenseResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 支出ID
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        amount:
+          type: integer
+          minimum: 0
+          description: 支出額
+          example: 100
+        date:
+          type: string
+          format: date
+          description: 支出日付
+          example: '2019-10-22'
+        content:
+          type: string
+          description: 支出内容
+          example: おにぎり
+    ExpenseRequest:
+      type: object
+      properties:
+        amount:
+          type: integer
+          minimum: 0
+          description: 支出額
+          example: 100
+        date:
+          type: string
+          format: date
+          description: 支出日付
+          example: '2019-10-22'
+        content:
+          type: string
+          description: 支出内容
+          example: おにぎり
+      required:
+        - amount
+        - date
+        - content
+    ResultResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: date
+          description: 該当月（yyyy-MM）
+          example: '2019-10'
+        totalExpense:
+          type: integer
+          minimum: 0
+          description: その月の支出合計
+          example: 10000
+        expenseGoal:
+          type: integer
+          description: その月の支出目標
+          example: 5000
+        balance:
+          type: integer
+          description: その月の差額
+          example: -5000
