@@ -9,3 +9,6 @@ $ openapi-generator generate -i <openapi schema file> -g <generator name> -o <ou
 $ openapi-generator generate -i openapi.yml -g nodejs-express-server -o nodejs-express-server
 $ openapi-generator generate -i swagger.yml -g kotlin-spring -o kotlin-spring
 ```
+
+## Reference
+https://github.com/OpenAPITools/openapi-generator
