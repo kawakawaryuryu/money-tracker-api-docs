@@ -9,8 +9,8 @@ info:
   title: Money Tracker API
   version: 1.0.0
 servers:
-- description: money tracker api mock server
-  url: https://virtserver.swaggerhub.com/kawakawaryuryu/money-tracker-api/1.0.0
+- description: money tracker api server
+  url: http://localhost:3000
 paths:
   /v1/expenses:
     get:

@@ -1,8 +1,8 @@
 openapi: 3.0.0
 servers:
-# Added by API Auto Mocking Plugin
-- description: money tracker api mock server
-  url: https://virtserver.swaggerhub.com/kawakawaryuryu/money-tracker-api/1.0.0
+  # Added by API Auto Mocking Plugin
+  - description: money tracker api server
+    url: http://localhost:3000
 info:
   description: This is a money tracker api
   version: "1.0.0"
