@@ -7,4 +7,4 @@ spring:
       WRITE_DATES_AS_TIMESTAMPS: false
 
 server:
-  port: 3000
+  port: 8080
