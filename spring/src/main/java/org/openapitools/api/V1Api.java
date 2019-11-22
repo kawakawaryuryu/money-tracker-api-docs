@@ -31,7 +31,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2019-11-20T01:05:59.783+09:00[Asia/Tokyo]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2019-11-22T19:01:18.210+09:00[Asia/Tokyo]")
 
 @Validated
 @Api(value = "v1", description = "the v1 API")
@@ -49,7 +49,7 @@ public interface V1Api {
         consumes = { "application/json" },
         method = RequestMethod.POST)
     default ResponseEntity<Void> addExpense(@ApiParam(value = "expense object"  )  @Valid @RequestBody ExpenseRequest expenseRequest) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
@@ -70,7 +70,7 @@ public interface V1Api {
                 }
             }
         });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.valueOf(200));
 
     }
 
@@ -90,7 +90,7 @@ public interface V1Api {
                 }
             }
         });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.valueOf(200));
 
     }
 
@@ -111,7 +111,7 @@ public interface V1Api {
                 }
             }
         });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.valueOf(200));
 
     }
 
