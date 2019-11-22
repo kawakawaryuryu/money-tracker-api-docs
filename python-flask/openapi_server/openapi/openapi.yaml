@@ -1,0 +1,236 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: kawakawaryuryu@hotmail.co.jp
+  description: This is a money tracker api
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Money Tracker API
+  version: 1.0.0
+servers:
+- description: money tracker api server
+  url: http://localhost:3000
+paths:
+  /v1/expenses:
+    get:
+      description: 支出一覧を取得する
+      operationId: get_expenses
+      parameters:
+      - description: 開始日
+        explode: true
+        in: query
+        name: beginDate
+        required: false
+        schema:
+          example: 2019-10-01
+          format: date
+          type: string
+        style: form
+      - description: 終了日
+        explode: true
+        in: query
+        name: endDate
+        required: false
+        schema:
+          example: 2019-10-31
+          format: date
+          type: string
+        style: form
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesResponse'
+          description: get succesfully
+      summary: gets expenses
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+    post:
+      description: 支出を登録する
+      operationId: add_expense
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseRequest'
+        description: expense object
+      responses:
+        201:
+          description: registered successfully
+          headers:
+            Location:
+              description: created expense url
+              explode: false
+              schema:
+                format: url
+                type: string
+              style: simple
+        400:
+          description: invalid input
+      summary: adds a expense
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /v1/expenses/{expenseId}:
+    get:
+      description: |
+        支出詳細を取得する
+      operationId: get_expense
+      parameters:
+      - explode: false
+        in: path
+        name: expenseId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseResponse'
+          description: get successfully
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: not found expenseId
+      summary: gets a expense
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /v1/results/{resultId}:
+    get:
+      description: |
+        その月の収支結果を取得する
+      operationId: get_result
+      parameters:
+      - example: 2019-10
+        explode: false
+        in: path
+        name: resultId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultResponse'
+          description: get successfully
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: not found resultId
+      summary: gets Result
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+components:
+  schemas:
+    NotFound:
+      properties:
+        code:
+          description: エラーコード
+          example: "404"
+          type: string
+        message:
+          description: エラーメッセージ
+          example: 指定されたIDは存在しません
+          type: string
+      type: object
+    ExpensesResponse:
+      example:
+        expenses:
+        - date: 2019-10-22T00:00:00.000+0000
+          amount: 100
+          id: d290f1ee-6c54-4b01-90e6-d701748f0851
+          content: おにぎり
+        - date: 2019-10-22T00:00:00.000+0000
+          amount: 100
+          id: d290f1ee-6c54-4b01-90e6-d701748f0851
+          content: おにぎり
+      properties:
+        expenses:
+          description: 支出一覧リスト
+          items:
+            $ref: '#/components/schemas/ExpenseResponse'
+          type: array
+      type: object
+    ExpenseResponse:
+      example:
+        date: 2019-10-22T00:00:00.000+0000
+        amount: 100
+        id: d290f1ee-6c54-4b01-90e6-d701748f0851
+        content: おにぎり
+      properties:
+        id:
+          description: 支出ID
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          type: string
+        amount:
+          description: 支出額
+          example: 100
+          minimum: 0
+          type: integer
+        date:
+          description: 支出日付
+          example: 2019-10-22
+          format: date
+          type: string
+        content:
+          description: 支出内容
+          example: おにぎり
+          type: string
+      type: object
+    ExpenseRequest:
+      example:
+        date: 2019-10-22T00:00:00.000+0000
+        amount: 100
+        content: おにぎり
+      properties:
+        amount:
+          description: 支出額
+          example: 100
+          minimum: 0
+          type: integer
+        date:
+          description: 支出日付
+          example: 2019-10-22
+          format: date
+          type: string
+        content:
+          description: 支出内容
+          example: おにぎり
+          type: string
+      required:
+      - amount
+      - content
+      - date
+      type: object
+    ResultResponse:
+      example:
+        expenseGoal: 5000
+        balance: -5000
+        id: 2000-01-23
+        totalExpense: 10000
+      properties:
+        id:
+          description: 該当月（yyyy-MM）
+          format: date
+          type: string
+        totalExpense:
+          description: その月の支出合計
+          example: 10000
+          minimum: 0
+          type: integer
+        expenseGoal:
+          description: その月の支出目標
+          example: 5000
+          type: integer
+        balance:
+          description: その月の差額
+          example: -5000
+          type: integer
+      type: object
