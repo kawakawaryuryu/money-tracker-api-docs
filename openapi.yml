@@ -180,6 +180,10 @@ components:
       properties:
         id:
           type: string
+          description: 結果ID
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        date:
+          type: string
           format: date
           description: 該当月（yyyy-MM）
           example: '2019-10'
