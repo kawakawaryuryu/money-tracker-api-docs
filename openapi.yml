@@ -86,12 +86,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+  /v1/results:
+    get:
+      summary: gets Results
+      operationId: getResults
+      description: |
+        収支結果を取得する
+      parameters:
+        - name: month
+          in: query
+          schema:
+            type: string
+          example: '2019-10'
+      responses:
+        '200':
+          description: get successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultsResponse'
   /v1/results/{resultId}:
     get:
       summary: gets Result
       operationId: getResult
       description: |
-        その月の収支結果を取得する
+        指定IDの収支結果を取得する
       parameters:
         - name: resultId
           in: path
@@ -175,6 +194,14 @@ components:
         - amount
         - date
         - content
+    ResultsResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          description: 結果リスト
+          items:
+            $ref: '#/components/schemas/ResultResponse'
     ResultResponse:
       type: object
       properties:
